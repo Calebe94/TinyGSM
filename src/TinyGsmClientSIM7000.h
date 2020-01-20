@@ -283,6 +283,20 @@ TINY_GSM_MODEM_GET_INFO_ATI()
     return waitResponse() == 1;
   }
 
+bool PSM_mode(){
+  sendAT(GF("+CPSMS=1"));
+    return waitResponse() == 1;
+}
+
+
+bool eDRX_mode14(){ //14 = ~ every hour
+  sendAT(GF("+CEDRXS=14"));
+    return waitResponse() == 1;
+}
+
+
+   
+
   /*
    * SIM card functions
    */
@@ -360,6 +374,16 @@ TINY_GSM_MODEM_WAIT_FOR_NETWORK()
   }
 
   String setPreferredMode(uint8_t mode) {
+    sendAT(GF("+CNMP="), mode);
+    if (waitResponse(GF(GSM_NL "+CNMP:")) != 1) {
+      return "OK";
+    }
+    String res = stream.readStringUntil('\n');
+    waitResponse();
+    return res;
+  }
+
+  String setPreferredLTEMode(uint8_t mode) {
     sendAT(GF("+CMNB="), mode);
     if (waitResponse(GF(GSM_NL "+CMNB:")) != 1) {
       return "OK";
@@ -368,6 +392,19 @@ TINY_GSM_MODEM_WAIT_FOR_NETWORK()
     waitResponse();
     return res;
   }
+
+  String setOperatingBand(uint8_t band) {
+    sendAT(GF("+CBANDCFG=\"NB-IOT\","), band);
+    if (waitResponse(GF(GSM_NL "+CBANDCFG:")) != 1) {
+      return "OK";
+    }
+    String res = stream.readStringUntil('\n');
+    waitResponse();
+    return res;
+  }
+
+
+
 
 
   /*
