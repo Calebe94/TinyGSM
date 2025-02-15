@@ -282,7 +282,7 @@ bool eDRX_mode14(){ //14 = ~ every hour
 }
 
 
-   
+
 
   /*
    * SIM card functions
@@ -680,6 +680,7 @@ TINY_GSM_MODEM_WAIT_FOR_NETWORK()
     stream.readStringUntil(','); //utctime
     *lat =  stream.readStringUntil(',').toFloat(); //lat
     *lon =  stream.readStringUntil(',').toFloat(); //lon
+    if ( (*lat) != 0 && (*lon) !=0 ) fix = true;
     if (alt != NULL) *alt =  stream.readStringUntil(',').toFloat(); //lon
     if (speed != NULL) *speed = stream.readStringUntil(',').toFloat(); //speed
     stream.readStringUntil(',');
